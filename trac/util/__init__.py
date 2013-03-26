@@ -838,8 +838,11 @@ class Ranges(object):
             try:
                 a, b = map(int, x.split('-', 1))
             except ValueError:
-                a, b = int(x), int(x)
-            if b >= a:
+                try:
+                    a, b = int(x), int(x)
+                except ValueError:
+                    a, b = x.split('-', 1)
+            if isinstance(a,str) or isinstance(b,str) or b >= a:
                 p.append((a, b))
             elif self.reorder:
                 p.append((b, a))
@@ -901,7 +904,7 @@ class Ranges(object):
             if a == b:
                 r.append(str(a))
             else:
-                r.append("%d-%d" % (a, b))
+                r.append("%s-%s" % (a, b))
         return ",".join(r)
 
     def __len__(self):
